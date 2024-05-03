@@ -1,6 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using BaseTemplate.Controllers;
 using BaseTemplate.Interfaces;
+using UnityEditor;
 using UnityEngine;
 
 namespace BaseTemplate
@@ -59,6 +63,30 @@ namespace BaseTemplate
                 Debug.LogError("Tick loop fail");
                 throw;
             }
+        }
+        
+        private void OnValidate()
+        {
+            //required for example workability
+            var paths = Directory.GetFiles("Assets/Scenes");
+            var scenes = new List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
+
+            foreach (string path in paths)
+            {
+                var correctPath = path.Replace(@"\", "/");
+                if (correctPath.Contains("meta") || scenes.Any(s => s.path == correctPath))
+                    continue;
+                
+                var newScene = new EditorBuildSettingsScene
+                {
+                    path = correctPath,
+                    enabled = true
+                };
+
+                scenes.Add(newScene);
+            }
+
+            EditorBuildSettings.scenes = scenes.ToArray();
         }
     }
 }
