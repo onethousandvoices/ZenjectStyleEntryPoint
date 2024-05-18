@@ -16,7 +16,6 @@ namespace BaseTemplate.Controllers
 
         public void Init()
         {
-            throw new();
             var allData = Resources.LoadAll<BaseData>("Data");
 
             foreach (var baseData in allData)
