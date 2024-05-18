@@ -13,13 +13,7 @@ namespace BaseTemplate.Views.UI
         [SerializeField] private DataPresenterView _presenterPrefab;
 
         private DataPresenterView _dataPresenter;
-
-        /// <summary>
-        /// As you said in the task not every ui elements are located in the scene.
-        /// But personally i don't understand it.
-        /// For me it would be better if canvas will contain these objects, but just turned off.
-        /// But maybe i have misunderstood something.. 
-        /// </summary>
+        
         public void Awake()
         {
             ViewHolder.AddView(this);

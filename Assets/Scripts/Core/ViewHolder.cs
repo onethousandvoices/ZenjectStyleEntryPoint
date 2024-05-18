@@ -23,15 +23,20 @@ namespace BaseTemplate
                 _holder.Add((key, id), value);
             }
         }
-        
+
         public static T GetView<T>(int id = 0) where T : MonoBehaviour
         {
             var key = typeof(T);
-            return _holder.ContainsKey((key, id)) 
-                ? (T)_holder[(key, id)] 
+            return _holder.ContainsKey((key, id))
+                ? (T)_holder[(key, id)]
                 : default;
         }
-        
+
+        public static MonoBehaviour GetView(Type type, int id = 0)
+            => _holder.ContainsKey((type, id)) 
+                ? _holder[(type, id)] 
+                : default;
+
         public static void Reset()
             => _holder.Clear();
     }

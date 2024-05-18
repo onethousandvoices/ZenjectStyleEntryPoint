@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BaseTemplate.Attributes;
 using BaseTemplate.Interfaces;
 using Data;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace BaseTemplate.Controllers
 {
+    [Controller, UsedImplicitly]
     public class DataController : IData, IInit
     {
         private readonly Dictionary<Type, List<BaseData>> _datas = new();
 
         public void Init()
         {
+            throw new();
             var allData = Resources.LoadAll<BaseData>("Data");
 
             foreach (var baseData in allData)

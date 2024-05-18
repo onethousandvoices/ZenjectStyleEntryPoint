@@ -1,27 +1,23 @@
-﻿using BaseTemplate.Enums;
+﻿using BaseTemplate.Attributes;
+using BaseTemplate.Enums;
 using BaseTemplate.Interfaces;
 using BaseTemplate.Views.UI;
 using Data;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace BaseTemplate.Controllers
 {
-    public class UIController : IInit, IGetControllers
+    [Controller, UsedImplicitly]
+    public class UIController : IInit
     {
-        private IData _data;
-        private IInput _input;
-        private MainCanvasView _mainCanvasView;
+        [Inject] private readonly IData _data;
+        [Inject] private readonly IInput _input;
+        [Inject] private readonly MainCanvasView _mainCanvasView;
 
         private BaseData[] _currentData;
         private int _pointer;
         
-        public void GetController(IGetController controllerHolder)
-        {
-            _data = controllerHolder.GetController<IData>();
-            _input = controllerHolder.GetController<IInput>();
-            _mainCanvasView = ViewHolder.GetView<MainCanvasView>();
-        }
-
         public void Init()
         {
             _mainCanvasView.Init(
@@ -50,11 +46,7 @@ namespace BaseTemplate.Controllers
             _pointer = Mathf.Clamp(_pointer, 0, _currentData.Length - 1);
             _mainCanvasView.ShowItem(_pointer);
         }
-
-        /// <summary>
-        /// This method was made generic because showcase only depends on data
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
+        
         private void Showcase<T>()
         {
             _pointer = 0;

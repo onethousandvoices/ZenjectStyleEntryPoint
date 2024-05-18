@@ -1,11 +1,14 @@
 ﻿using System;
+using BaseTemplate.Attributes;
 using BaseTemplate.Enums;
 using BaseTemplate.Interfaces;
 using BaseTemplate.Views;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace BaseTemplate.Controllers
 {
+    [Controller, UsedImplicitly]
     public class InputController : IInput, IInit, ITick
     {
         private event Action _leftEvent;
@@ -29,15 +32,7 @@ namespace BaseTemplate.Controllers
             inputView.SubscribeToPointerDown(value => _mouseInput = value);
             inputView.SubscribeToPointerUp(SwipeHandler);
         }
-
-        /// <summary>
-        /// As you said in the task input detection performed for desktop and mobile devices.
-        /// I really hope that "Input System prohibition" meant Unity's New Input System.
-        /// 
-        /// PC users may use keyboard arrows or mouse swipes.
-        /// Mobile devices can use only swipes.
-        /// For more devices such as consoles this method must be expanded
-        /// </summary>
+        
         public void Tick()
         {
             if (Input.GetKeyUp(KeyCode.LeftArrow))
