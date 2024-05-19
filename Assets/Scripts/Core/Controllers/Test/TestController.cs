@@ -1,12 +1,10 @@
 ﻿#if STRESSTEST
 using BaseTemplate.Attributes;
 using BaseTemplate.Interfaces;
-using JetBrains.Annotations;
 
 namespace BaseTemplate.Controllers
 {
-    
-    [Controller, UsedImplicitly]
+    [Controller]
     public class TestController : IInit
     {
         [Inject] private readonly ITestInject _test0;

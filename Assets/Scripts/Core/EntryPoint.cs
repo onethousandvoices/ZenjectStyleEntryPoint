@@ -21,13 +21,13 @@ namespace BaseTemplate
         private ITick[] _ticks;
         private bool _isInit;
 
-        private async void Start()
+        private void Start()
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             
-            await Task.Run(FindAndCacheControllers);
-            await Task.Run(InjectControllers);
+            FindAndCacheControllers();
+            InjectControllers();
 
             _ticks = GetControllers<ITick>();
             var inits = GetControllers<IInit>();
@@ -49,7 +49,7 @@ namespace BaseTemplate
             }
             
             stopwatch.Stop();
-            Debug.Log($"EntryPoint awake execution time: {stopwatch.ElapsedMilliseconds} ms");
+            Debug.Log($"EntryPoint start execution time: {stopwatch.ElapsedMilliseconds} ms");
         }
 
         private void Update()
@@ -94,7 +94,7 @@ namespace BaseTemplate
                 {
                     for (int i = 0; i < 10000; i++)
                     {
-                        var controller1 = Expression.Lambda<Func<object>>(Expression.New(type)).Compile()();
+                        var controller1 = Activator.CreateInstance(type);
                         var implementedInterfaces1 = type.GetInterfaces();
             
                         foreach (var implementedInterface in implementedInterfaces1)
@@ -106,7 +106,7 @@ namespace BaseTemplate
                 }
 #endif
 
-                var controller = Expression.Lambda<Func<object>>(Expression.New(type)).Compile()();
+                var controller = Activator.CreateInstance(type);
                 var implementedInterfaces = type.GetInterfaces();
             
                 foreach (var implementedInterface in implementedInterfaces)

@@ -9,7 +9,7 @@ namespace BaseTemplate.Controllers
         
     }
     
-    [Controller, UsedImplicitly]
+    [Controller]
     public class TestInject : ITestInject
     {
         public const string TEST = "TESTER";

@@ -3,12 +3,11 @@ using BaseTemplate.Enums;
 using BaseTemplate.Interfaces;
 using BaseTemplate.Views.UI;
 using Data;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace BaseTemplate.Controllers
 {
-    [Controller, UsedImplicitly]
+    [Controller]
     public class UIController : IInit
     {
         [Inject] private readonly IData _data;

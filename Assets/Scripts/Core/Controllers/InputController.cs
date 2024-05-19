@@ -3,12 +3,11 @@ using BaseTemplate.Attributes;
 using BaseTemplate.Enums;
 using BaseTemplate.Interfaces;
 using BaseTemplate.Views;
-using JetBrains.Annotations;
 using UnityEngine;
 
 namespace BaseTemplate.Controllers
 {
-    [Controller, UsedImplicitly]
+    [Controller]
     public class InputController : IInput, IInit, ITick
     {
         private event Action _leftEvent;

@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace BaseTemplate.Attributes
 {
-    [UsedImplicitly]
+    [MeansImplicitUse]
     [AttributeUsage(AttributeTargets.Class)]
     public class ControllerAttribute : Attribute { }
 }
