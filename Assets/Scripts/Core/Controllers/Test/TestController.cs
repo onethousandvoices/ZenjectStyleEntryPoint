@@ -1,9 +1,10 @@
-﻿#if STRESSTEST
-using BaseTemplate.Attributes;
+﻿using BaseTemplate.Attributes;
 using BaseTemplate.Interfaces;
+using BaseTemplate.Views.UI;
 
 namespace BaseTemplate.Controllers
 {
+
     [Controller]
     public class TestController : IInit
     {
@@ -42,4 +43,3 @@ namespace BaseTemplate.Controllers
         public void Init() { }
     }
 }
-#endif

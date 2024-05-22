@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BaseTemplate.Controllers
 {
-    [Controller]
+    [Controller, MustBeAfter(typeof(DataController))]
     public class InputController : IInput, IInit, ITick
     {
         private event Action _leftEvent;

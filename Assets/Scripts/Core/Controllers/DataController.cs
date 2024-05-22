@@ -12,7 +12,12 @@ namespace BaseTemplate.Controllers
     public class DataController : IData, IInit
     {
         private readonly Dictionary<Type, List<BaseData>> _datas = new();
-
+        
+        public DataController(ITestInject testInject)
+        {
+            
+        }
+        
         public void Init()
         {
             var allData = Resources.LoadAll<BaseData>("Data");
