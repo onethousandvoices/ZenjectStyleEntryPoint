@@ -58,12 +58,11 @@ namespace BaseTemplate
                 {
                     current = inits[i];
                     current.Init();
-                    Debug.LogError(current.GetType().Name);
-                }
-
 #if EXTRALOGGING
-                Debug.Log("Init completed");
+                    Debug.LogError(current.GetType().Name);
 #endif
+                }
+                Debug.Log("Init completed");
                 _isInit = true;
             }
             catch (Exception)
