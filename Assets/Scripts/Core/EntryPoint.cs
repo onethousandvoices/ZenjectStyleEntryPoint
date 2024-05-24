@@ -155,19 +155,8 @@ namespace BaseTemplate
                 var type = orderedTypes[i];
 #if STRESSTEST
                 if (type == typeof(TestController))
-                {
                     for (int j = 0; j < 10000; j++)
-                    {
-                        var controller1 = Activator.CreateInstance(type);
-                        var implementedInterfaces1 = type.GetInterfaces();
-
-                        foreach (var implementedInterface in implementedInterfaces1)
-                        {
-                            _controllers.TryAdd(implementedInterface, new());
-                            _controllers[implementedInterface].Add(controller1);
-                        }
-                    }
-                }
+                        CreateController(type, Array.Empty<object>());
 #endif
                 parameters.Clear();
                 var ctorParameters = type.GetConstructors()[0].GetParameters();
