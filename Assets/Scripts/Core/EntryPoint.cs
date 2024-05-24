@@ -1,4 +1,6 @@
 #define STRESSTEST
+#define STOPWATCH
+#define EXTRALOGGING
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +10,6 @@ using System.Reflection;
 using BaseTemplate.Attributes;
 using BaseTemplate.Controllers;
 using BaseTemplate.Interfaces;
-using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -21,14 +22,13 @@ namespace BaseTemplate
         /// The list below shows call order of controllers
         /// This part of the code is generated automatically
         /// </summary>
-        [UsedImplicitly]
-        public static Type[] CurrentQueue =
+        public static readonly Type[] CurrentQueue =
         {
             typeof(DataController),
-            typeof(UIController),
             typeof(InputController),
             typeof(TestController),
             typeof(TestInject),
+            typeof(UIController),
         };
     }
 
@@ -40,8 +40,10 @@ namespace BaseTemplate
 
         private void Start()
         {
+#if STOPWATCH
             var stopwatch = new Stopwatch();
             stopwatch.Start();
+#endif
 
             FindAndCacheControllers();
             InjectControllers();
@@ -59,7 +61,9 @@ namespace BaseTemplate
                     Debug.LogError(current.GetType().Name);
                 }
 
+#if EXTRALOGGING
                 Debug.Log("Init completed");
+#endif
                 _isInit = true;
             }
             catch (Exception)
@@ -67,9 +71,13 @@ namespace BaseTemplate
                 throw new($"Init failed at {current?.GetType().Name}");
             }
 
+#if STOPWATCH
             stopwatch.Stop();
             Debug.Log($"EntryPoint start execution time: {stopwatch.ElapsedMilliseconds} ms");
+#endif
+#if EXTRALOGGING
             Debug.Log($"Controllers count {inits.Length}");
+#endif
         }
 
         private void Update()
@@ -99,6 +107,16 @@ namespace BaseTemplate
                 return controllersList.Cast<T>().ToArray();
             Debug.LogError($"Controllers of type {typeof(T)} wasn't found");
             return default;
+        }
+        
+        private object GetDependency(Type requested)
+        {
+            var isView = requested.IsSubclassOf(typeof(MonoBehaviour));
+            if (isView)
+                return ViewHolder.GetView(requested);
+            if (_controllers.ContainsKey(requested))
+                return _controllers[requested][0];
+            throw new($"Dependency wasn't fount for {requested.Name}");
         }
 
         private void FindAndCacheControllers()
@@ -191,11 +209,6 @@ namespace BaseTemplate
 
                 CreateController(type, typeParameters.Select(GetDependency).ToArray());
             }
-
-            var currentQueue = ControllersQueueDisplay.CurrentQueue;
-
-            _controllers[typeof(IInit)] = _controllers[typeof(IInit)].OrderBy(c => Array.IndexOf(currentQueue, c.GetType())).ToList();
-            _controllers[typeof(ITick)] = _controllers[typeof(ITick)].OrderBy(c => Array.IndexOf(currentQueue, c.GetType())).ToList();
         }
 
         private void CreateController(Type type, object[] parameters)
@@ -230,16 +243,6 @@ namespace BaseTemplate
                     }
                 }
             }
-        }
-
-        private object GetDependency(Type requested)
-        {
-            var isView = requested.IsSubclassOf(typeof(MonoBehaviour));
-            if (isView)
-                return ViewHolder.GetView(requested);
-            if (_controllers.ContainsKey(requested))
-                return _controllers[requested][0];
-            throw new($"Dependency wasn't fount for {requested.Name}");
         }
 
 #if UNITY_EDITOR
@@ -314,7 +317,7 @@ namespace BaseTemplate
                 currentController = split[0];
 
                 if (currentController == split[1])
-                    throw new($"{split[0]} depends on itself");
+                    throw new($"{split[0]} requested the same priority. MustBeAfter type should differ");
 
                 var mustBeAfter = controllers.FindIndex(s => s.StartsWith(split[1]) && !s.Contains(currentController));
 
@@ -322,7 +325,7 @@ namespace BaseTemplate
                 {
                     var requestedController = controllers.First(s => s.StartsWith(split[1]));
                     if (requestedController.Split('.')[1] == currentController)
-                        throw new($"Controller of type {split[0]} depends on {split[1]} and {requestedController.Split('.')[0]} depends on {requestedController.Split('.')[1]}");
+                        throw new($"Controller of type {split[0]} requested to be after {split[1]} and {requestedController.Split('.')[0]} requested to be after {requestedController.Split('.')[1]}");
                     throw new("Something went wrong resolving dependencies");
                 }
 

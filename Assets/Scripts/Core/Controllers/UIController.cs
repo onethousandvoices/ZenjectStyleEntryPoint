@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BaseTemplate.Controllers
 {
-    [Controller, MustBeAfter(typeof(DataController))]
+    [Controller]
     public class UIController : IInit
     {
         [Inject] private readonly IData _data;
