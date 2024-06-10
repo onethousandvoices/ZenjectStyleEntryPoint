@@ -32,11 +32,6 @@ namespace BaseTemplate
                 : default;
         }
 
-        public static MonoBehaviour GetView(Type type, int id = 0)
-            => _holder.ContainsKey((type, id)) 
-                ? _holder[(type, id)] 
-                : default;
-
         public static void Reset()
             => _holder.Clear();
     }
