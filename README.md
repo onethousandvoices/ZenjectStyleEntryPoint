@@ -10,4 +10,4 @@ Of course none developer can create 10k controllers and support them.
 More close to real life scenarious (30 controllers) took 10 ms Editor and around 250 ms APK.
 
 Every controller shown in the project are only for example and showcase. 
-Core of the system is written in EntryPoint.cs https://github.com/onethousandvoices/ZenjectStyleEntryPoint/blob/main/Assets/Scripts/Core/EntryPoint.cs
+Core of the system is written in EntryPoint.cs https://github.com/onethousandvoices/ZenjectStyleEntryPoint/blob/main/Assets/Scripts/DIContainer/EntryPoint.cs
