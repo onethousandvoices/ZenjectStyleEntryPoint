@@ -173,7 +173,7 @@ namespace BaseTemplate
                     return;
                 }
 
-                var others = delayedControllers.Where(kvp => kvp.Key != type);
+                var others = delayedControllers.Where(keyValuePair => keyValuePair.Key != type);
                 foreach (var other in others)
                 {
                     var otherInterfaces = other.Key.GetInterfaces();
@@ -183,11 +183,11 @@ namespace BaseTemplate
                     return;
                 }
 
-                var dependencies = typeParameters.Select(p =>
+                var dependencies = typeParameters.Select(parameter =>
                 {
-                    var dependency = GetDependency(p);
+                    var dependency = GetDependency(parameter);
                     if (dependency == null)
-                        throw new($"Dependency wasn't found for parameter {p} of {type} constructor");
+                        throw new($"Dependency wasn't found for parameter {parameter} of {type} constructor");
                     return dependency;
                 }).ToArray();
                 CreateController(type, dependencies);
@@ -212,10 +212,9 @@ namespace BaseTemplate
 
         private void InjectControllers()
         {
-            var keys = _controllers.Keys.ToArray();
-            for (int i = 0; i < keys.Length; i++)
-                foreach (var controller in _controllers[keys[i]])
-                    InjectControllerImpl(controller);
+            foreach (var key in _controllers.Keys)
+            foreach (var controller in _controllers[key])
+                InjectControllerImpl(controller);
             InjectControllerImpl(this);
         }
 
