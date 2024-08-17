@@ -401,8 +401,17 @@ namespace BaseTemplate
                     var requestedController = controllers.FirstOrDefault(s => s.StartsWith(dependsOn));
                     if (requestedController == null)
                     {
-                        if (allStacks.Any(s => s.Last() == dependsOn))
+                        var existingStack = allStacks.FirstOrDefault(s => s.Last() == dependsOn);
+                        if (existingStack != null)
+                        {
+                            var temp = new List<string>(existingStack);
+                            temp.AddRange(stack);
+                            temp.Reverse();
+                            allStacks.Add(new(temp));
+                            allStacks.Remove(existingStack);
+                            allStacks.Remove(stack);
                             break;
+                        }
 
                         var allStacksList = allStacks.SelectMany(s => s).ToList();
                         var musBeAfterIndex = allStacksList.IndexOf(dependsOn);
@@ -426,8 +435,11 @@ namespace BaseTemplate
                     current = requestedController;
                 }
             }
-            
-            return allStacks.SelectMany(s => s).ToArray();
+
+            var independentControllers = allStacks.Where(s => s.Count == 1).SelectMany(s => s).OrderByDescending(s => s).ToArray();
+            allStacks.RemoveAll(s => s.Count == 1);
+            allStacks.Insert(0, new(independentControllers));
+            return allStacks.OrderBy(s => s.First()).SelectMany(s => s).ToArray();
         }
         
         [MenuItem("Tools/DIContainer/Create Queue")]
